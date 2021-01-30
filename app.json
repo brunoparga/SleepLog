@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Sleep Log",
-    "slug": "Sleep Log",
+    "slug": "SleepLog",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
