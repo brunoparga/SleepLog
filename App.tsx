@@ -1,66 +1,89 @@
-import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements';
-import * as FileSystem from 'expo-file-system';
+import {
+  documentDirectory,
+  readAsStringAsync,
+  writeAsStringAsync,
+} from 'expo-file-system';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 22,
     alignItems: 'center',
-  },
-
-  title: {
-    fontSize: 32,
-    marginTop: 20,
+    justifyContent: 'center',
   },
 
   buttonContainer: {
-    margin: 20,
+    marginBottom: 80,
   },
 
   button: {
-    height: 80,
-    paddingHorizontal: 20,
+    height: 100,
+    width: 200,
   },
 
-  item: {
-    padding: 10,
-    fontSize: 18,
-    height: 44,
+  buttonTitle: {
+    fontSize: 28,
   },
 });
 
+type Time<T> = { awake: boolean; time: T };
+
 function App(): React.ReactNode {
-  const [times, setTimes] = useState([] as { awake: boolean; time: Date }[]);
-  const [amAwake, setAmAwake] = useState(true);
-  const currentState = amAwake ? 'awake' : 'asleep';
+  const [times, setTimes] = useState([] as Time<Date>[]);
+  const [awake, setAwake] = useState(true);
+  const storedTimesFile = `${documentDirectory as string}storedTimes.json`;
 
-  const timeElements = times.map(({ awake, time }) => (
-    <Text key={time.toISOString()} style={styles.item}>
-      {awake ? 'Awake' : 'Asleep'} at {time.toISOString()}
-    </Text>
-  ));
+  useEffect(
+    function useReadTimes() {
+      async function readStoredTimes(): void {
+        try {
+          const readTimeStrings = JSON.parse(
+            await readAsStringAsync(storedTimesFile)
+          ) as Time<string>[];
 
-  function onPress() {
-    const newAmAwake = !amAwake;
+          const readTimes: Time<Date>[] = readTimeStrings.map((foo) => ({
+            ...foo,
+            time: new Date(foo.time),
+          }));
 
-    setAmAwake(newAmAwake);
-    setTimes(times.concat([{ awake: newAmAwake, time: new Date() }]));
+          setTimes(readTimes);
+          setAwake(readTimes[readTimes.length - 1].awake);
+        } catch {
+          writeAsStringAsync(storedTimesFile, JSON.stringify([])).catch(
+            undefined
+          );
+        }
+      }
+
+      // eslint-disable-next-line putout/putout
+      readStoredTimes();
+    },
+    [storedTimesFile]
+  );
+
+  async function onPress() {
+    const newAwake = !awake;
+    const newTimes = times.concat([{ awake: newAwake, time: new Date() }]);
+
+    setAwake(newAwake);
+    setTimes(newTimes);
+
+    await writeAsStringAsync(storedTimesFile, JSON.stringify(newTimes));
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Sleep Log</Text>
+    <View style={styles.container}>
       <Button
+        raised
         containerStyle={styles.buttonContainer}
         buttonStyle={styles.button}
+        titleStyle={styles.buttonTitle}
         onPress={onPress}
-        title="Add new time!"
+        title={awake ? 'Go to bed' : 'Wake up'}
       />
-      <Text>Currently {currentState}</Text>
-      {timeElements}
-    </ScrollView>
+    </View>
   );
 }
 
