@@ -7,4 +7,6 @@ type ButtonsState = {
   setAwake: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export type { ButtonsState, Time };
+type Children = { children: JSX.Element[] };
+
+export type { ButtonsState, Children, Time };

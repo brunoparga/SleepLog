@@ -1,27 +1,24 @@
 import React from 'react';
-import { Button } from 'react-native-elements';
 
-import { share, writeEmpty, writeLog } from '../fileOps';
 import useButtonsState from '../hooks/useButtonsState';
+import SmallButtonsView from '../styles/SmallButtonsView';
+
+import LogEventButton from './LogEventButton';
+import ShareButton from './ShareButton';
+import DeleteButton from './DeleteButton';
 
 function Buttons(): JSX.Element {
-  const { times, setTimes, awake, setAwake } = useButtonsState();
+  const state = useButtonsState();
 
-  async function logEvent() {
-    const newAwake = !awake;
-    const newTimes = times.concat([{ awake: newAwake, time: new Date() }]);
-
-    setAwake(newAwake);
-    setTimes(newTimes);
-
-    await writeLog(newTimes);
-  }
+  // const { times, setTimes, awake, setAwake } = state;
 
   return (
     <>
-      <Button onPress={logEvent} title={awake ? 'Go to bed' : 'Wake up'} />
-      <Button onPress={share} title={'Share logs'} />
-      <Button onPress={writeEmpty} title={'Delete logs'} />
+      <LogEventButton state={state} />
+      <SmallButtonsView>
+        <ShareButton />
+        <DeleteButton />
+      </SmallButtonsView>
     </>
   );
 }
