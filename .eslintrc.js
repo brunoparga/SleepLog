@@ -30,6 +30,7 @@ module.exports = {
       "error",
       { "devDependencies": ["**/__tests__/*"] }
     ],
+    "import/no-unresolved": "off",
     "no-shadow": "off",
     "no-undef": "off",
     "no-use-before-define": "off",

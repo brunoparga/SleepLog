@@ -1,0 +1,1 @@
+export type Time<T> = { awake: boolean; time: T };
