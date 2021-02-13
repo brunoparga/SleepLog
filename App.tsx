@@ -6,16 +6,18 @@ import {
   readAsStringAsync,
   writeAsStringAsync,
 } from 'expo-file-system';
+import { shareAsync } from 'expo-sharing';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    paddingTop: 40,
   },
 
   buttonContainer: {
-    marginBottom: 80,
+    marginTop: 20,
   },
 
   button: {
@@ -70,7 +72,15 @@ function App(): React.ReactNode {
     setAwake(newAwake);
     setTimes(newTimes);
 
-    await writeAsStringAsync(storedTimesFile, JSON.stringify(newTimes));
+    await writeAsStringAsync(
+      storedTimesFile,
+      // eslint-disable-next-line unicorn/no-null, no-magic-numbers
+      JSON.stringify(newTimes, null, 2)
+    );
+  }
+
+  async function share() {
+    await shareAsync(storedTimesFile);
   }
 
   return (
@@ -82,6 +92,26 @@ function App(): React.ReactNode {
         titleStyle={styles.buttonTitle}
         onPress={onPress}
         title={awake ? 'Go to bed' : 'Wake up'}
+      />
+      <Button
+        raised
+        containerStyle={styles.buttonContainer}
+        buttonStyle={styles.button}
+        titleStyle={styles.buttonTitle}
+        onPress={share}
+        title={'Share logs'}
+      />
+      <Button
+        raised
+        containerStyle={styles.buttonContainer}
+        buttonStyle={styles.button}
+        titleStyle={styles.buttonTitle}
+        onPress={() =>
+          writeAsStringAsync(storedTimesFile, JSON.stringify([])).catch(
+            undefined
+          )
+        }
+        title={'Delete logs'}
       />
     </View>
   );
