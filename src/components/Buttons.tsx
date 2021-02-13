@@ -2,6 +2,8 @@ import React from 'react';
 
 import useButtonsState from '../hooks/useButtonsState';
 import SmallButtonsView from '../styles/SmallButtonsView';
+import AsleepView from '../styles/AsleepView';
+import SmallButton from '../styles/SmallButton';
 
 import LogEventButton from './LogEventButton';
 import ShareButton from './ShareButton';
@@ -10,15 +12,32 @@ import DeleteButton from './DeleteButton';
 function Buttons(): JSX.Element {
   const state = useButtonsState();
 
-  // const { times, setTimes, awake, setAwake } = state;
+  const { times, awake } = state;
+
+  const awakeButtons = (
+    <SmallButtonsView>
+      <ShareButton />
+      <DeleteButton />
+    </SmallButtonsView>
+  );
+
+  const sleepTime = times[times.length - 1]?.time.toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+  const asleepData = (
+    <AsleepView>
+      {`Sleep started
+at ${sleepTime}.
+Sweet dreams!`}
+      <SmallButton title="Anti-nap" />
+    </AsleepView>
+  );
 
   return (
     <>
       <LogEventButton state={state} />
-      <SmallButtonsView>
-        <ShareButton />
-        <DeleteButton />
-      </SmallButtonsView>
+      {awake ? awakeButtons : asleepData}
     </>
   );
 }
