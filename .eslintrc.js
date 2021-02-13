@@ -46,7 +46,7 @@ module.exports = {
       files: ["*.js"],
       rules: {
         "import/no-unused-modules": [
-          "error",
+          "off",
           {
             src: ["**/*.js"],
             missingExports: false,
@@ -59,7 +59,7 @@ module.exports = {
       files: ["*.ts"],
       rules: {
         "import/no-unused-modules": [
-          "error",
+          "off",
           {
             src: ["**/*.ts"],
             missingExports: false,
@@ -72,7 +72,7 @@ module.exports = {
       files: ["*.jsx"],
       rules: {
         "import/no-unused-modules": [
-          "error",
+          "off",
           {
             src: ["**/*.jsx"],
             missingExports: false,
@@ -85,7 +85,7 @@ module.exports = {
       files: ["*.tsx"],
       rules: {
         "import/no-unused-modules": [
-          "error",
+          "off",
           {
             src: ["**/*.tsx"],
             missingExports: false,
