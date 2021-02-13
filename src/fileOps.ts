@@ -5,12 +5,12 @@ import {
 } from 'expo-file-system';
 import { shareAsync } from 'expo-sharing';
 
-import { Time } from './types';
+import { CoreEntry } from './types';
 
 const logFile = `${documentDirectory as string}storedTimes.json`;
 
-async function readTimeStrings(): Promise<Time<string>[]> {
-  return JSON.parse(await readAsStringAsync(logFile)) as Time<string>[];
+async function readEntryStrings(): Promise<CoreEntry[]> {
+  return JSON.parse(await readAsStringAsync(logFile)) as CoreEntry[];
 }
 
 async function share(): Promise<void> {
@@ -21,14 +21,14 @@ function writeEmpty(): void {
   writeAsStringAsync(logFile, JSON.stringify([])).catch(undefined);
 }
 
-async function writeLog(newTimes: Time<Date>[]): Promise<void> {
+async function writeLog(newEntries: CoreEntry[]): Promise<void> {
   const replacer = undefined;
   const twoSpaces = 2;
 
   await writeAsStringAsync(
     logFile,
-    JSON.stringify(newTimes, replacer, twoSpaces)
+    JSON.stringify(newEntries, replacer, twoSpaces)
   ).catch(undefined);
 }
 
-export { readTimeStrings, share, writeEmpty, writeLog };
+export { readEntryStrings, share, writeEmpty, writeLog };

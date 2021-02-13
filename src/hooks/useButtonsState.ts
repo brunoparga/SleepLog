@@ -1,24 +1,31 @@
 import { useEffect, useState } from 'react';
 
-import { ButtonsState, Time } from '../types';
-import { readTimeStrings, writeEmpty } from '../fileOps';
+import { BasicEntry, ButtonsState, CoreEntry } from '../types';
+import { readEntryStrings, writeEmpty } from '../fileOps';
+
+function parseEntry(entry: Record<string, Date | string>): BasicEntry {
+  return {
+    startTime: new Date(entry.startTime),
+    endTime: new Date(entry.endTime),
+  };
+}
 
 function useButtonsState(): ButtonsState {
-  const [times, setTimes] = useState([] as Time<Date>[]);
+  const [entries, setEntries] = useState([] as CoreEntry[]);
   const [awake, setAwake] = useState(true);
 
-  useEffect(function useReadTimes() {
-    async function readStoredTimes(): void {
+  useEffect(() => {
+    async function readEntries(): void {
       try {
-        const timeStrings = await readTimeStrings();
+        const entryStrings = await readEntryStrings();
 
-        const readTimes: Time<Date>[] = timeStrings.map((timeItem) => ({
-          ...timeItem,
-          time: new Date(timeItem.time),
+        const entriesRead = entryStrings.map((entry) => ({
+          core: parseEntry(entry.core),
+          naps: entry.naps?.map((nap) => parseEntry(nap)),
+          negativeNaps: entry.negativeNaps?.map((negNap) => parseEntry(negNap)),
         }));
 
-        setTimes(readTimes);
-        setAwake(readTimes[readTimes.length - 1].awake);
+        setEntries(entriesRead);
       } catch {
         // Async but it doesn't really matter
         writeEmpty();
@@ -26,10 +33,10 @@ function useButtonsState(): ButtonsState {
     }
 
     // eslint-disable-next-line putout/putout
-    readStoredTimes();
+    readEntries();
   }, []);
 
-  return { times, setTimes, awake, setAwake };
+  return { entries, setEntries, awake, setAwake };
 }
 
 export default useButtonsState;

@@ -12,7 +12,7 @@ import DeleteButton from './DeleteButton';
 function Buttons(): JSX.Element {
   const state = useButtonsState();
 
-  const { times, awake } = state;
+  const { entries, awake } = state;
 
   const awakeButtons = (
     <SmallButtonsView>
@@ -21,7 +21,9 @@ function Buttons(): JSX.Element {
     </SmallButtonsView>
   );
 
-  const sleepTime = times[times.length - 1]?.time.toLocaleTimeString([], {
+  const sleepTime = entries[
+    entries.length - 1
+  ]?.core.startTime.toLocaleTimeString([], {
     hour: '2-digit',
     minute: '2-digit',
   });
