@@ -9,8 +9,8 @@ import { CoreEntry } from './types';
 
 const logFile = `${documentDirectory as string}storedTimes.json`;
 
-async function readEntryStrings(): Promise<CoreEntry[]> {
-  return JSON.parse(await readAsStringAsync(logFile)) as CoreEntry[];
+async function readEntryStrings(): Promise<CoreEntry<string>[]> {
+  return JSON.parse(await readAsStringAsync(logFile)) as CoreEntry<string>[];
 }
 
 async function share(): Promise<void> {
@@ -21,7 +21,7 @@ function writeEmpty(): void {
   writeAsStringAsync(logFile, JSON.stringify([])).catch(undefined);
 }
 
-async function writeLog(newEntries: CoreEntry[]): Promise<void> {
+async function writeLog(newEntries: CoreEntry<Date>[]): Promise<void> {
   const replacer = undefined;
   const twoSpaces = 2;
 

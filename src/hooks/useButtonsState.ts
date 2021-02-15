@@ -3,15 +3,18 @@ import { useEffect, useState } from 'react';
 import { BasicEntry, ButtonsState, CoreEntry } from '../types';
 import { readEntryStrings, writeEmpty } from '../fileOps';
 
-function parseEntry(entry: Record<string, Date | string>): BasicEntry {
-  return {
-    startTime: new Date(entry.startTime),
-    endTime: new Date(entry.endTime),
-  };
+function parseEntry(entry: BasicEntry<string>): BasicEntry<Date> {
+  const start = { startTime: new Date(entry.startTime) };
+
+  if (entry.endTime) {
+    return { ...start, endTime: new Date(entry.endTime) };
+  }
+
+  return start;
 }
 
 function useButtonsState(): ButtonsState {
-  const [entries, setEntries] = useState([] as CoreEntry[]);
+  const [entries, setEntries] = useState([] as CoreEntry<Date>[]);
   const [awake, setAwake] = useState(true);
 
   useEffect(() => {
@@ -26,6 +29,10 @@ function useButtonsState(): ButtonsState {
         }));
 
         setEntries(entriesRead);
+
+        const lastEntry = entriesRead[entriesRead.length - 1].core;
+
+        setAwake(!lastEntry.endTime);
       } catch {
         // Async but it doesn't really matter
         writeEmpty();

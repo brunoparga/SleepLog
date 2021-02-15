@@ -29,9 +29,9 @@ function Buttons(): JSX.Element {
   });
   const asleepData = (
     <AsleepView>
-      {`Sleep started
+      <>{`Sleep started
 at ${sleepTime}.
-Sweet dreams!`}
+Sweet dreams!`}</>
       <SmallButton title="Anti-nap" />
     </AsleepView>
   );
