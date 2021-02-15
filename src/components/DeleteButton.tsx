@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { writeEmpty } from '../fileOps';
+import { writeEmpty } from '../fileOperations';
 import SmallButton from '../styles/SmallButton';
 
 function DeleteButton(): JSX.Element {

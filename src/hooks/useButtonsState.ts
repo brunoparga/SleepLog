@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
 import { BasicEntry, ButtonsState, CoreEntry } from '../types';
-import { readEntryStrings, writeEmpty } from '../fileOps';
+import { readEntryStrings, writeEmpty } from '../fileOperations';
 
-function parseEntry(entry: BasicEntry<string>): BasicEntry<Date> {
+function parseBasicEntry(entry: BasicEntry<string>): BasicEntry<Date> {
   const start = { startTime: new Date(entry.startTime) };
 
   if (entry.endTime) {
@@ -11,6 +11,14 @@ function parseEntry(entry: BasicEntry<string>): BasicEntry<Date> {
   }
 
   return start;
+}
+
+function parseCoreEntry(entry: CoreEntry<string>): CoreEntry<Date> {
+  return {
+    core: parseBasicEntry(entry.core),
+    naps: entry.naps?.map((nap) => parseBasicEntry(nap)),
+    negativeNaps: entry.negativeNaps?.map((negNap) => parseBasicEntry(negNap)),
+  };
 }
 
 function useButtonsState(): ButtonsState {
@@ -22,15 +30,11 @@ function useButtonsState(): ButtonsState {
       try {
         const entryStrings = await readEntryStrings();
 
-        const entriesRead = entryStrings.map((entry) => ({
-          core: parseEntry(entry.core),
-          naps: entry.naps?.map((nap) => parseEntry(nap)),
-          negativeNaps: entry.negativeNaps?.map((negNap) => parseEntry(negNap)),
-        }));
+        const parsedEntries = entryStrings.map(parseCoreEntry);
 
-        setEntries(entriesRead);
+        setEntries(parsedEntries);
 
-        const lastEntry = entriesRead[entriesRead.length - 1].core;
+        const lastEntry = parsedEntries[parsedEntries.length - 1].core;
 
         setAwake(!lastEntry.endTime);
       } catch {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { share } from '../fileOps';
+import { share } from '../fileOperations';
 import SmallButton from '../styles/SmallButton';
 
 function ShareButton(): JSX.Element {
