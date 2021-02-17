@@ -25,12 +25,12 @@ function wakeUp(entries: CoreEntry<Date>[]): CoreEntry<Date>[] {
 function LogEventButton({ state }: { state: ButtonsState }): JSX.Element {
   const { entries, setEntries, awake, setAwake } = state;
 
-  async function logCoreEvent() {
+  function logCoreEvent() {
     const newEntries = awake ? goToBed(entries) : wakeUp(entries);
 
     setAwake(!awake);
     setEntries(newEntries);
-    await writeLog(newEntries);
+    void writeLog(newEntries);
   }
 
   return (

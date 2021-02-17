@@ -36,7 +36,7 @@ function useButtonsState(): ButtonsState {
 
         const lastEntry = parsedEntries[parsedEntries.length - 1].core;
 
-        setAwake(!lastEntry.endTime);
+        setAwake(Boolean(lastEntry.endTime));
       } catch {
         // Async but it doesn't really matter
         writeEmpty();
@@ -44,7 +44,7 @@ function useButtonsState(): ButtonsState {
     }
 
     // eslint-disable-next-line putout/putout
-    readEntries();
+    void readEntries();
   }, []);
 
   return { entries, setEntries, awake, setAwake };

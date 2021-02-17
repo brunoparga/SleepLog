@@ -34,6 +34,7 @@ module.exports = {
     "no-shadow": "off",
     "no-undef": "off",
     "no-use-before-define": "off",
+    "no-void": ["error", { "allowAsStatement": true }],
     "quotes": ["error", "single"],
   },
   settings: {

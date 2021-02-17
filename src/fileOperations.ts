@@ -13,22 +13,22 @@ async function readEntryStrings(): Promise<CoreEntry<string>[]> {
   return JSON.parse(await readAsStringAsync(logFile)) as CoreEntry<string>[];
 }
 
-async function share(): Promise<void> {
-  await shareAsync(logFile);
+function share(): void {
+  void shareAsync(logFile);
 }
 
 function writeEmpty(): void {
   writeAsStringAsync(logFile, JSON.stringify([])).catch(undefined);
 }
 
-async function writeLog(newEntries: CoreEntry<Date>[]): Promise<void> {
+function writeLog(newEntries: CoreEntry<Date>[]): void {
   const replacer = undefined;
   const twoSpaces = 2;
 
-  await writeAsStringAsync(
+  void writeAsStringAsync(
     logFile,
     JSON.stringify(newEntries, replacer, twoSpaces)
-  ).catch(undefined);
+  );
 }
 
 export { readEntryStrings, share, writeEmpty, writeLog };
