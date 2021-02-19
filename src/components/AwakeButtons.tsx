@@ -1,15 +1,16 @@
 import React from 'react';
 
 import SmallButtonsView from '../styles/SmallButtonsView';
+import { ToDelete } from '../types';
 
 import ShareButton from './ShareButton';
 import DeleteButton from './DeleteButton';
 
-function AwakeButtons(): JSX.Element {
+function AwakeButtons({ numberOfEntries, setEntries }: ToDelete): JSX.Element {
   return (
     <SmallButtonsView>
       <ShareButton />
-      <DeleteButton />
+      <DeleteButton numberOfEntries={numberOfEntries} setEntries={setEntries} />
     </SmallButtonsView>
   );
 }

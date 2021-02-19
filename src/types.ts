@@ -15,4 +15,9 @@ type ButtonsState = {
 
 type Children = { children: JSX.Element[] };
 
-export type { BasicEntry, ButtonsState, Children, CoreEntry };
+type ToDelete = {
+  numberOfEntries: number;
+  setEntries: React.Dispatch<React.SetStateAction<CoreEntry<Date>[]>>;
+};
+
+export type { BasicEntry, ButtonsState, Children, CoreEntry, ToDelete };

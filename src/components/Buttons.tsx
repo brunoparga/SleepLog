@@ -9,12 +9,19 @@ import AsleepButtons from './AsleepButtons';
 function Buttons(): JSX.Element {
   const state = useButtonsState();
 
-  const { entries, awake } = state;
+  const { entries, setEntries, awake } = state;
 
   return (
     <>
       <LogEventButton state={state} />
-      {awake ? <AwakeButtons /> : <AsleepButtons entries={entries} />}
+      {awake ? (
+        <AwakeButtons
+          numberOfEntries={entries.length}
+          setEntries={setEntries}
+        />
+      ) : (
+        <AsleepButtons entries={entries} />
+      )}
     </>
   );
 }
